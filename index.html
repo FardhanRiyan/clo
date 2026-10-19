@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gudang Barang Kelompok 2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ── LOADING OVERLAY ── -->
+<div id="loading-overlay">
+  <div class="spinner"></div>
+  <p>Memuat...</p>
+</div>
+
+<!-- ── TOAST NOTIFICATION ── -->
+<div id="toast"></div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: LOGIN
+════════════════════════════════════════ -->
+<div class="auth-page active" id="page-login">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="auth-body">
+    <div class="auth-card">
+      <div class="auth-title">LOGIN</div>
+      <br>
+      <input class="auth-input" id="login-email"    type="email"    placeholder="Email...">
+      <input class="auth-input" id="login-password" type="password" placeholder="Password...">
+      <div id="login-error" class="auth-error"></div>
+      <div class="auth-hint">
+        Belum punya akun? <a onclick="showPage('page-register')">Daftar sekarang</a>
+      </div>
+      <div class="auth-buttons">
+        <button class="auth-btn auth-btn-back"   onclick="showPage('page-login')">← Kembali</button>
+        <button class="auth-btn auth-btn-submit" onclick="handleLogin()">Login →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: REGISTER
+════════════════════════════════════════ -->
+<div class="auth-page" id="page-register">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="auth-body">
+    <div class="auth-card">
+      <div class="auth-title">REGISTER</div>
+      <br>
+      <input class="auth-input" id="reg-nama"     type="text"     placeholder="Nama lengkap...">
+      <input class="auth-input" id="reg-username" type="text"     placeholder="Username...">
+      <input class="auth-input" id="reg-email"    type="email"    placeholder="Email...">
+      <input class="auth-input" id="reg-password" type="password" placeholder="Password...">
+      <input class="auth-input" id="reg-telp"     type="tel"      placeholder="No. Telepon...">
+      <div id="reg-error" class="auth-error"></div>
+      <br>
+      <div class="auth-buttons">
+        <button class="auth-btn auth-btn-back"   onclick="showPage('page-login')">← Kembali</button>
+        <button class="auth-btn auth-btn-submit" onclick="handleRegister()">Daftar →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: DASHBOARD (User)
+════════════════════════════════════════ -->
+<div class="page" id="page-dashboard">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item" onclick="navTo('page-profile')">       <span class="nav-icon">👤</span> My Profile</div>
+      <div class="nav-item active" onclick="navTo('page-dashboard')"> <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="navTo('page-data-barang')">   <span class="nav-icon">📦</span> Data Barang</div>
+      <div class="nav-item" onclick="navTo('page-barang-masuk')">  <span class="nav-icon">📥</span> Barang Masuk</div>
+      <div class="nav-item" onclick="navTo('page-barang-keluar')"> <span class="nav-icon">📤</span> Barang Keluar</div>
+      <div class="sidebar-bottom">
+        <div class="brand-text">Gudang<br><span>Barang</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="page-title">Dashboard</div>
+      <div class="page-subtitle">Ringkasan kondisi gudang saat ini</div>
+      <div class="stats-grid">
+        <div class="stat-card">       <div class="stat-label">Total barang</div><div class="stat-value" id="dash-total">—</div></div>
+        <div class="stat-card green"> <div class="stat-label">Aman</div>        <div class="stat-value" id="dash-aman">—</div></div>
+        <div class="stat-card gold">  <div class="stat-label">Menipis</div>     <div class="stat-value" id="dash-menipis">—</div></div>
+        <div class="stat-card red">   <div class="stat-label">Habis</div>       <div class="stat-value" id="dash-habis">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Barang perlu perhatian</div>
+        <table><thead><tr><th>Nama barang</th><th style="text-align:right">Status</th></tr></thead>
+        <tbody id="dash-perhatian-body"><tr><td colspan="2" style="color:var(--muted);text-align:center">Memuat...</td></tr></tbody></table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: DASHBOARD ADMIN
+════════════════════════════════════════ -->
+<div class="page" id="page-dashboard-admin">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item" onclick="navTo('page-profile')">       <span class="nav-icon">👤</span> My Profile</div>
+      <div class="nav-item active" onclick="navTo('page-dashboard-admin')"> <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="navTo('page-data-barang')">   <span class="nav-icon">📦</span> Data Barang</div>
+      <div class="nav-item" onclick="navTo('page-barang-masuk')">  <span class="nav-icon">📥</span> Barang Masuk</div>
+      <div class="nav-item" onclick="navTo('page-barang-keluar')"> <span class="nav-icon">📤</span> Barang Keluar</div>
+      <div class="sidebar-bottom">
+        <div class="brand-text">Gudang<br><span>Barang</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="page-title">Dashboard Admin</div>
+      <div class="page-subtitle">Ringkasan kondisi gudang saat ini</div>
+      <div class="stats-grid">
+        <div class="stat-card">      <div class="stat-label">Total barang</div>    <div class="stat-value" id="adm-total">—</div></div>
+        <div class="stat-card green"><div class="stat-label">Pesanan Baru</div>    <div class="stat-value" id="adm-masuk">—</div></div>
+        <div class="stat-card red">  <div class="stat-label">Stok rendah</div>     <div class="stat-value" id="adm-rendah">—</div></div>
+        <div class="stat-card gold"> <div class="stat-label">Total nilai stok</div><div class="stat-value" id="adm-nilai">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Tren Pesanan Gudang (Bulanan)</div>
+        <div class="chart-wrap"><canvas id="trendChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Barang perlu perhatian</div>
+        <table><thead><tr><th>Nama barang</th><th style="text-align:right">Status</th></tr></thead>
+        <tbody id="adm-perhatian-body"><tr><td colspan="2" style="color:var(--muted);text-align:center">Memuat...</td></tr></tbody></table>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: MY PROFILE
+════════════════════════════════════════ -->
+<div class="page" id="page-profile">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item active">                                  <span class="nav-icon">👤</span> My Profile</div>
+      <div class="nav-item" id="profile-dash-link" onclick="navTo('page-dashboard')"> <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="navTo('page-data-barang')">   <span class="nav-icon">📦</span> Data Barang</div>
+      <div class="nav-item" onclick="navTo('page-barang-masuk')">  <span class="nav-icon">📥</span> Barang Masuk</div>
+      <div class="nav-item" onclick="navTo('page-barang-keluar')"> <span class="nav-icon">📤</span> Barang Keluar</div>
+      <div class="sidebar-bottom">
+        <div class="brand-text">Gudang<br><span>Barang</span></div>
+      </div>
+    </aside>
+    <main class="main" style="padding:0">
+      <div id="profile-content" style="padding:36px 40px"></div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: DATA BARANG
+════════════════════════════════════════ -->
+<div class="page" id="page-data-barang">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item" onclick="navTo('page-profile')">       <span class="nav-icon">👤</span> My Profile</div>
+      <div class="nav-item" id="data-dash-link" onclick="navTo('page-dashboard')">  <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item active">                                  <span class="nav-icon">📦</span> Data Barang</div>
+      <div class="nav-item" onclick="navTo('page-barang-masuk')">  <span class="nav-icon">📥</span> Barang Masuk</div>
+      <div class="nav-item" onclick="navTo('page-barang-keluar')"> <span class="nav-icon">📤</span> Barang Keluar</div>
+      <div class="sidebar-bottom">
+        <div class="brand-text">Gudang<br><span>Barang</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="page-title">Data Barang</div>
+      <div class="page-subtitle">Kelola daftar barang yang tercatat di gudang.</div>
+      <div class="filters">
+        <input class="filter-input" id="filter-cari"     type="text" placeholder="Cari nama atau kode barang" oninput="filterBarang()">
+        <select class="filter-input" id="filter-kategori" onchange="filterBarang()">
+          <option value="">Semua kategori</option>
+          <option>Kebersihan</option><option>Elektronik</option><option>ATK</option><option>Perabot</option>
+        </select>
+        <select class="filter-input" id="filter-status" onchange="filterBarang()">
+          <option value="">Semua Status</option>
+          <option>Habis</option><option>Menipis</option><option>Aman</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="card-title">Daftar Barang</div>
+        <table>
+          <thead><tr><th>Kode</th><th>Nama barang</th><th>Kategori</th><th>Stok</th><th style="text-align:right">Status</th></tr></thead>
+          <tbody id="data-barang-body"><tr><td colspan="5" style="color:var(--muted);text-align:center">Memuat...</td></tr></tbody>
+        </table>
+      </div>
+      <button class="fab" onclick="openTambahBarang()">+ Tambah Barang</button>
+      <div style="clear:both"></div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: BARANG MASUK
+════════════════════════════════════════ -->
+<div class="page" id="page-barang-masuk">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item" onclick="navTo('page-profile')">       <span class="nav-icon">👤</span> My Profile</div>
+      <div class="nav-item" id="masuk-dash-link" onclick="navTo('page-dashboard')"> <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="navTo('page-data-barang')">   <span class="nav-icon">📦</span> Data Barang</div>
+      <div class="nav-item active">                                  <span class="nav-icon">📥</span> Barang Masuk</div>
+      <div class="nav-item" onclick="navTo('page-barang-keluar')"> <span class="nav-icon">📤</span> Barang Keluar</div>
+      <div class="sidebar-bottom">
+        <div class="brand-text">Gudang<br><span>Barang</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="page-title">Barang Masuk</div>
+      <div class="page-subtitle">Catat & kelola penambahan stok dari supplier.</div>
+
+      <div class="card trx-form-card">
+        <div class="card-title">📥 Catat Barang Masuk</div>
+        <div class="trx-form-grid">
+          <div>
+            <label class="form-label">Pilih Barang</label>
+          <!-- ── MODAL: EDIT BARANG ── -->
+          <div id="modal-edit-barang" class="modal-overlay" onclick="if(event.target.id==='modal-edit-barang')closeEditBarang()">
+            <div class="modal-card">
+              <div class="card-title">Edit Barang</div>
+              <label class="form-label">Kode Barang</label>
+              <input class="form-input" id="edit-kode" type="text" placeholder="BRG-012">
+              <label class="form-label">Nama Barang</label>
+              <input class="form-input" id="edit-nama" type="text" placeholder="Nama barang...">
+              <label class="form-label">Kategori</label>
+              <select class="form-select" id="edit-kategori">
+                <option>Kebersihan</option><option>Elektronik</option><option>ATK</option><option>Perabot</option>
+              </select>
+              <label class="form-label">Stok Minimum</label>
+              <input class="form-input" id="edit-minStok" type="number" min="0" value="10">
+              <div style="display:flex;gap:10px;margin-top:8px">
+                <button class="btn btn-outline" style="flex:1" onclick="closeEditBarang()">Batal</button>
+                <button class="btn btn-primary" style="flex:1" onclick="simpanEditBarang()">Simpan</button>
+              </div>
+            </div>
+          </div>
+
+            <select class="form-select" id="masuk-barang-select">
+              <option value="">— Pilih barang —</option>
+            </select>
+          </div>
+          <div>
+            <label class="form-label">Jumlah Masuk</label>
+            <input class="form-input" id="masuk-jumlah" type="number" min="1" placeholder="0">
+          </div>
+          <div>
+            <label class="form-label">Tanggal</label>
+            <input class="form-input" id="masuk-tanggal" type="date">
+          </div>
+          <div>
+            <label class="form-label">Catatan (opsional)</label>
+            <input class="form-input" id="masuk-catatan" type="text" placeholder="Misal: dari supplier A...">
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:4px" onclick="simpanBarangMasuk()">
+          + Simpan Transaksi
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Riwayat Barang Masuk</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Barang</th>
+                <th style="text-align:center">Jumlah</th>
+                <th>Catatan</th>
+                <th style="text-align:right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="riwayat-masuk-body">
+              <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Memuat...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     PAGE: BARANG KELUAR
+════════════════════════════════════════ -->
+<div class="page" id="page-barang-keluar">
+  <div class="topbar">
+    <div class="topbar-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+      </svg>
+    </div>
+    <h1>Gudang Barang Kelompok 2</h1>
+  </div>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="nav-item" onclick="navTo('page-profile')">       <span class="nav-icon">👤</span> My Profile</div>
+      <div class="nav-item" id="keluar-dash-link" onclick="navTo('page-dashboard')"> <span class="nav-icon">📊</span> Dashboard</div>
+      <div class="nav-item" onclick="navTo('page-data-barang')">   <span class="nav-icon">📦</span> Data Barang</div>
+      <div class="nav-item" onclick="navTo('page-barang-masuk')">  <span class="nav-icon">📥</span> Barang Masuk</div>
+      <div class="nav-item active">                                  <span class="nav-icon">📤</span> Barang Keluar</div>
+      <div class="sidebar-bottom">
+        <div class="brand-text">Gudang<br><span>Barang</span></div>
+      </div>
+    </aside>
+    <main class="main">
+      <div class="page-title">Barang Keluar</div>
+      <div class="page-subtitle">Catat & kelola pengurangan stok karena pemakaian.</div>
+
+      <div class="card trx-form-card">
+        <div class="card-title">📤 Catat Barang Keluar</div>
+        <div class="trx-form-grid">
+          <div>
+            <label class="form-label">Pilih Barang</label>
+            <select class="form-select" id="keluar-barang-select" onchange="updateStokInfo()">
+              <option value="">— Pilih barang —</option>
+            </select>
+            <div class="stok-info" id="stok-info-text">Stok tersedia: —</div>
+          </div>
+          <div>
+            <label class="form-label">Jumlah Keluar</label>
+            <input class="form-input" id="keluar-jumlah" type="number" min="1" placeholder="0">
+          </div>
+          <div>
+            <label class="form-label">Tanggal</label>
+            <input class="form-input" id="keluar-tanggal" type="date">
+          </div>
+          <div>
+            <label class="form-label">Catatan (opsional)</label>
+            <input class="form-input" id="keluar-catatan" type="text" placeholder="Misal: untuk divisi IT...">
+          </div>
+        </div>
+        <button class="btn btn-primary" style="margin-top:4px" onclick="simpanBarangKeluar()">
+          + Simpan Transaksi
+        </button>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Riwayat Barang Keluar</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Tanggal</th>
+                <th>Barang</th>
+                <th style="text-align:center">Jumlah</th>
+                <th>Catatan</th>
+                <th style="text-align:right">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="riwayat-keluar-body">
+              <tr><td colspan="5" style="color:var(--muted);text-align:center;padding:20px">Memuat...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: TAMBAH BARANG
+════════════════════════════════════════ -->
+<div id="modal-tambah" class="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-card">
+    <div class="card-title">Tambah Barang Baru</div>
+    <label class="form-label">Kode Barang</label>
+    <input class="form-input" id="new-kode" type="text" placeholder="BRG-012">
+    <label class="form-label">Nama Barang</label>
+    <input class="form-input" id="new-nama" type="text" placeholder="Nama barang...">
+    <label class="form-label">Kategori</label>
+    <select class="form-select" id="new-kategori">
+      <option>Kebersihan</option><option>Elektronik</option><option>ATK</option><option>Perabot</option>
+    </select>
+    <label class="form-label">Stok Awal</label>
+    <input class="form-input" id="new-stok" type="number" min="0" value="0">
+    <label class="form-label">Stok Minimum (batas menipis)</label>
+    <input class="form-input" id="new-minStok" type="number" min="0" value="10">
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeModalDirect()">Batal</button>
+      <button class="btn btn-primary" style="flex:1" onclick="simpanBarangBaru()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: EDIT TRANSAKSI
+════════════════════════════════════════ -->
+<div id="modal-edit-trx" class="modal-overlay" onclick="if(event.target.id==='modal-edit-trx')closeEditTransaksi()">
+  <div class="modal-card">
+    <div class="modal-card-header">
+      <div>
+        <div class="card-title" style="margin-bottom:2px">Edit Transaksi</div>
+        <div style="font-size:13px;color:var(--muted)">
+          <span id="edit-trx-type"></span> &nbsp;·&nbsp; <strong id="edit-trx-nama"></strong>
+        </div>
+      </div>
+      <button class="modal-close-btn" onclick="closeEditTransaksi()">✕</button>
+    </div>
+    <label class="form-label">Jumlah</label>
+    <input class="form-input" id="edit-trx-jumlah" type="number" min="1">
+    <label class="form-label">Tanggal</label>
+    <input class="form-input" id="edit-trx-tanggal" type="date">
+    <label class="form-label">Catatan</label>
+    <input class="form-input" id="edit-trx-catatan" type="text" placeholder="Catatan...">
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeEditTransaksi()">Batal</button>
+      <button class="btn btn-primary" style="flex:1" onclick="simpanEditTransaksi()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     MODAL: EDIT PROFIL
+════════════════════════════════════════ -->
+<div id="modal-edit-profile" class="modal-overlay" onclick="if(event.target.id==='modal-edit-profile')closeEditProfile()">
+  <div class="modal-card">
+    <div class="modal-card-header">
+      <div class="card-title" style="margin-bottom:0">Edit Profil</div>
+      <button class="modal-close-btn" onclick="closeEditProfile()">✕</button>
+    </div>
+    <br>
+    <label class="form-label">Nama Lengkap</label>
+    <input class="form-input" id="edit-nama" type="text" placeholder="Nama lengkap...">
+    <label class="form-label">Username</label>
+    <input class="form-input" id="edit-username" type="text" placeholder="Username...">
+    <label class="form-label">No. Telepon</label>
+    <input class="form-input" id="edit-telp" type="tel" placeholder="No. Telepon...">
+    <div style="display:flex;gap:10px;margin-top:8px">
+      <button class="btn btn-outline" style="flex:1" onclick="closeEditProfile()">Batal</button>
+      <button class="btn btn-primary" style="flex:1" onclick="simpanEditProfile()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── External libraries ── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<!-- ── Firebase SDK ── -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+<!-- ── App modules ── -->
+<script src="js/firebase.js"></script>
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/profile.js"></script>
+<script src="js/barang.js"></script>
+<script src="js/transaksi.js"></script>
+<script src="js/navigation.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
